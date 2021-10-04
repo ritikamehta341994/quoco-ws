@@ -3,10 +3,11 @@ package service.core;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import java.util.LinkedList;
 
 @WebService
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-public interface QuoterService {
+public interface BrokerService {
     @WebMethod
-    Quotation generateQuotation(ClientInfo info);
+    LinkedList<Quotation> getQuotations(ClientInfo info) ;
 }

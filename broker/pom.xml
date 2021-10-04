@@ -8,15 +8,14 @@
         <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>quoco.ws</groupId>
-    <artifactId>client</artifactId>
-    <packaging>jar</packaging>
 
+    <groupId>quoco.ws</groupId>
+    <artifactId>broker</artifactId>
+    <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>labs</groupId>
@@ -53,7 +52,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
                 <configuration>
-                    <mainClass>Client</mainClass>
+                    <mainClass>service.core.Broker</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -69,5 +68,4 @@
 
         </plugins>
     </build>
-
 </project>
