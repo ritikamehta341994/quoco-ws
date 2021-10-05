@@ -22,57 +22,50 @@ import java.util.concurrent.Executors;
 @WebService
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public class Quoter extends AbstractQuotationService {
-	// All references are to be prefixed with an AF (e.g. AF001000)
-	public static final String PREFIX = "AF";
-	public static final String COMPANY = "Auld Fellas Ltd.";
-	
+	// All references are to be prefixed with an DD (e.g. DD001000)
+	public static final String PREFIX = "DD";
+	public static final String COMPANY = "Dodgy Drivers Corp.";
+
 	/**
 	 * Quote generation:
-	 * 30% discount for being male
-	 * 2% discount per year over 60
-	 * 20% discount for less than 3 penalty points
-	 * 50% penalty (i.e. reduction in discount) for more than 60 penalty points 
+	 * 5% discount per penalty point (3 points required for qualification)
+	 * 50% penalty for <= 3 penalty points
+	 * 10% discount per year no claims
 	 */
 	@WebMethod
 	public Quotation generateQuotation(ClientInfo info) {
-		// Create an initial quotation between 600 and 1200
-		double price = generatePrice(600, 600);
-		
-		// Automatic 30% discount for being male
-		int discount = (info.gender == ClientInfo.MALE) ? 30:0;
-		
-		// Automatic 2% discount per year over 60...
-		discount += (info.age > 60) ? (2*(info.age-60)) : 0;
-		
-		// Add a points discount
-		discount += getPointsDiscount(info);
-		
+		// Create an initial quotation between 800 and 1000
+		double price = generatePrice(800, 200);
+
+		// 5% discount per penalty point (3 points required for qualification)
+		int discount = (info.points > 3) ? 5*info.points:-50;
+
+		// Add a no claims discount
+		discount += getNoClaimsDiscount(info);
+
 		// Generate the quotation and send it back
 		return new Quotation(COMPANY, generateReference(PREFIX), (price * (100-discount)) / 100);
 	}
 
-	private int getPointsDiscount(ClientInfo info) {
-		if (info.points < 3) return 20;
-		if (info.points <= 6) return 0;
-		return -50;
-		
+	private int getNoClaimsDiscount(ClientInfo info) {
+		return 10*info.noClaims;
 	}
 	public static void main(String[] args) {
 		try {
-			String host = (args.length>0)?args[0]:"localhost";
+
 			Endpoint endpoint = Endpoint.create(new Quoter());
-			HttpServer server = HttpServer.create(new InetSocketAddress(9001), 5);
+			HttpServer server = HttpServer.create(new InetSocketAddress(9002), 5);
 			server.setExecutor(Executors.newFixedThreadPool(5));
 			HttpContext context = server.createContext("/quotation");
 			endpoint.publish(context);
 			server.start();
 			Thread.sleep(6000);
 			JmDNS jmDNS = JmDNS.create(InetAddress.getLocalHost());
-			ServiceInfo auldfellasService= ServiceInfo.create("_http._tcp.local.",
-					"auldfellas",9001,
+			ServiceInfo dodgydriversService= ServiceInfo.create("_http._tcp.local.",
+					"dodgydrivers",9002,
 					"path=/quotation?wsdl");
 
-			jmDNS.registerService(auldfellasService);
+			jmDNS.registerService(dodgydriversService);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

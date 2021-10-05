@@ -8,27 +8,28 @@ import java.text.NumberFormat;
 public class Client {
     public static void main(String[] args) {
         try {
-            String host = "localhost";
-            int port = 9001;
+            String host = (args.length>0)?args[0]:"localhost";
+            int port = 9000;
             // More Advanced flag-based configuration
             // [ copy this from the ws-quote example client ]
-
+            Thread.sleep(20000);
             URL wsdlUrl = new
-                    URL("http://" + host + ":" + port + "/quotation?wsdl");
+                    URL("http://" + host + ":" + port + "/broker?wsdl");
+            System.out.println("WSDL URL:.................."+wsdlUrl);
             QName serviceName =
-                    new QName("http://core.service/", "QuoterService");
+                    new QName("http://core.service/", "BrokerService");
             Service service = Service.create(wsdlUrl, serviceName);
-            QName portName = new QName("http://core.service/", "QuoterPort");
-            QuoterService quotationService =
-                    service.getPort(portName, QuoterService.class);
+            QName portName = new QName("http://core.service/", "BrokerPort");
+
+            BrokerService brokerService =
+                    service.getPort(portName, BrokerService.class);
             for (ClientInfo info : clients) {
                 displayProfile(info);
-
-                Quotation quotation = quotationService.generateQuotation(info);
-                displayQuotation(quotation);
+                for(Quotation quotation : brokerService.getQuotations(info)) {
+                    displayQuotation(quotation);
+                }
                 System.out.println("\n");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

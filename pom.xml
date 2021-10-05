@@ -12,6 +12,9 @@
         <module>core</module>
         <module>auldfellas</module>
         <module>client</module>
+        <module>broker</module>
+        <module>girlpower</module>
+        <module>dodgydrivers</module>
     </modules>
 
     <properties>

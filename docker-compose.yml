@@ -1,0 +1,31 @@
+version: '3'
+services:
+    broker:
+        build: broker
+        environment:
+            HOSTNAME: broker
+        ports:
+            -   "9000:9000"
+    auldfellas:
+        build: auldfellas
+        environment:
+            HOSTNAME: auldfellas
+        ports:
+            - "9001:9001"
+    dodgydrivers:
+        build: dodgydrivers
+        environment:
+            HOSTNAME: dodgydrivers
+        ports:
+            - "9002:9002"
+    girlpower:
+        build: girlpower
+        environment:
+            HOSTNAME: girlpower
+        ports:
+            - "9003:9003"
+    client:
+        build: client
+        environment:
+            HOSTNAME: broker
+

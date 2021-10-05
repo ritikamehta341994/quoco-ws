@@ -8,15 +8,14 @@
         <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>quoco.ws</groupId>
-    <artifactId>client</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>girlpower</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>labs</groupId>
@@ -49,6 +48,11 @@
             <artifactId>resolver</artifactId>
             <version>20050927</version>
         </dependency>
+        <dependency>
+            <groupId>org.jmdns</groupId>
+            <artifactId>jmdns</artifactId>
+            <version>3.5.5</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -58,7 +62,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
                 <configuration>
-                    <mainClass>Client</mainClass>
+                    <mainClass>service.core.Quoter</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -84,7 +88,7 @@
                             <transformers>
                                 <transformer implementation=
                                                      "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>Client</mainClass>
+                                    <mainClass>service.core.Quoter</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -93,5 +97,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
